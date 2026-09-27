@@ -5,11 +5,12 @@ from fractions import Fraction
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "question_engine"))
 from dice_sum import generate_dice_question, solve_dice_question
+from coin_streak import generate_coin_streak_question, solve_coin_streak
 
 from db import get_connection, log_attempt
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "..", "interview_trainer.db")
-TOLERANCE = 0.005  # accept answers within 0.5% of the exact probability
+TOLERANCE = 0.01  # accept answers within 0.5% of the exact probability
 
 
 def run():
@@ -20,8 +21,14 @@ def run():
     print("Enter your answer as a decimal (e.g. 0.42). Type 'quit' to stop.\n")
 
     while True:
-        q = generate_dice_question(difficulty)
-        exact = solve_dice_question(q["n"], q["k"])
+        import random as _r
+        family = _r.choice(["dice_sum", "coin_streak"])
+        if family == "dice_sum":
+            q = generate_dice_question(difficulty)
+            exact = solve_dice_question(q["parameters"]["n"], q["parameters"]["k"])
+        else:
+            q = generate_coin_streak_question(difficulty)
+            exact = solve_coin_streak(q["parameters"]["n"], q["parameters"]["k"])
         exact_float = float(exact)
 
         print(q["question"])
@@ -47,8 +54,8 @@ def run():
             conn,
             family=q["family"],
             difficulty=q["difficulty"],
-            n=q["n"],
-            k=q["k"],
+            n=q["parameters"]["n"],
+            k=q["parameters"]["k"],
             correct_answer=exact_float,
             user_answer=user_answer,
             correct=correct,

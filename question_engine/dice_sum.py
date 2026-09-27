@@ -27,8 +27,7 @@ def generate_dice_question(difficulty="easy"):
     return {
         "family": "dice_sum",
         "difficulty": difficulty,
-        "n": n,
-        "k": k,
+        "parameters": {"n": n, "k": k},
         "question": f"You roll {n} fair six-sided dice. What is the probability that the sum is at least {k}?",
     }
 
