@@ -6,12 +6,20 @@
         body { font-family: sans-serif; max-width: 600px; margin: 60px auto; }
         .question { font-size: 1.2em; margin-bottom: 20px; }
         .result { margin-top: 15px; font-weight: bold; }
+        .stats { color: #666; font-size: 0.9em; margin-bottom: 20px; }
         input[type=text] { font-size: 1em; padding: 6px; width: 200px; }
         button { font-size: 1em; padding: 6px 14px; }
     </style>
 </head>
 <body>
-    <h2>Interview Trainer - Probability Puzzles</h2>
+    <h2>Interview Trainer — Probability Puzzles</h2>
+
+    <p class="stats">
+        Topic: {{ family }} &nbsp;|&nbsp;
+        Difficulty: {{ difficulty }} &nbsp;|&nbsp;
+        Skill estimate: {{ skill }} &nbsp;|&nbsp;
+        Attempts logged for this topic: {{ attempt_count }}
+    </p>
 
     {% if result %}
     <p class="result">{{ result }}</p>

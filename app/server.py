@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "question_engin
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "skill_model"))
 from dice_sum import generate_dice_question, solve_dice_question
 from coin_streak import generate_coin_streak_question, solve_coin_streak
-from tracker import get_current_skill
+from tracker import get_current_skill, get_attempt_count
 from selector import choose_difficulty
 
 from db import get_connection, log_attempt
@@ -34,6 +34,7 @@ def make_question():
         exact = solve_coin_streak(q["parameters"]["n"], q["parameters"]["k"])
     q["exact_answer"] = float(exact)
     q["current_skill"] = skill
+    q["attempt_count"] = get_attempt_count(DB_PATH, family)
     return q
 
 
@@ -50,6 +51,8 @@ def index():
         difficulty=q["difficulty"],
         start_time=time.time(),
         result=None,
+        skill=round(q["current_skill"], 1),
+        attempt_count=q["attempt_count"],
     )
 
 
@@ -102,6 +105,8 @@ def answer():
         difficulty=q["difficulty"],
         start_time=time.time(),
         result=result,
+        skill=round(q["current_skill"], 1),
+        attempt_count=q["attempt_count"],
     )
 
 
