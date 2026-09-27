@@ -4,8 +4,11 @@ import time
 import random
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "question_engine"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "skill_model"))
 from dice_sum import generate_dice_question, solve_dice_question
 from coin_streak import generate_coin_streak_question, solve_coin_streak
+from tracker import get_current_skill
+from selector import choose_difficulty
 
 from db import get_connection, log_attempt
 from fractions import Fraction
@@ -15,11 +18,14 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "..", "interview_trainer.db")
-TOLERANCE = 0.01
+TOLERANCE = 0.01  # bumped up from CLI's 0.005 to allow more casual rounding
 
 
-def make_question(difficulty="easy"):
+def make_question():
     family = random.choice(["dice_sum", "coin_streak"])
+    skill = get_current_skill(DB_PATH, family)
+    difficulty = choose_difficulty(skill)
+
     if family == "dice_sum":
         q = generate_dice_question(difficulty)
         exact = solve_dice_question(q["parameters"]["n"], q["parameters"]["k"])
@@ -27,6 +33,7 @@ def make_question(difficulty="easy"):
         q = generate_coin_streak_question(difficulty)
         exact = solve_coin_streak(q["parameters"]["n"], q["parameters"]["k"])
     q["exact_answer"] = float(exact)
+    q["current_skill"] = skill
     return q
 
 
