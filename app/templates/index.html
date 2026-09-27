@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interview Trainer</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 60px auto; }
+        .question { font-size: 1.2em; margin-bottom: 20px; }
+        .result { margin-top: 15px; font-weight: bold; }
+        input[type=text] { font-size: 1em; padding: 6px; width: 200px; }
+        button { font-size: 1em; padding: 6px 14px; }
+    </style>
+</head>
+<body>
+    <h2>Interview Trainer — Probability Puzzles</h2>
+
+    {% if result %}
+    <p class="result">{{ result }}</p>
+    {% endif %}
+
+    <p class="question">{{ question }}</p>
+
+    <form action="/answer" method="post">
+        <input type="hidden" name="family" value="{{ family }}">
+        <input type="hidden" name="difficulty" value="{{ difficulty }}">
+        <input type="hidden" name="n" value="{{ n }}">
+        <input type="hidden" name="k" value="{{ k }}">
+        <input type="hidden" name="exact_answer" value="{{ exact_answer }}">
+        <input type="hidden" name="start_time" value="{{ start_time }}">
+        <input type="text" name="user_answer" placeholder="e.g. 0.42 or 7/12" autofocus required>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
